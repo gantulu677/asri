@@ -1,13 +1,13 @@
 # Asri Online Store
 
-Asri Online Store is a React-based storefront for Asri Collection, featuring a product catalog, shopping cart, checkout, and Midtrans Snap payment integration.
+Asri Online Store is a React-based storefront for Asri Collection, featuring a product catalog, shopping cart, checkout, and Midtrans Snap Sandbox payment integration.
 
 ## Features
 
 - Product catalog with category navigation.
 - Shopping cart and quantity management.
 - Customer and shipping information form.
-- Checkout through Midtrans Snap.
+- Checkout through Midtrans Snap Sandbox.
 - Payment status page.
 - Supabase integration reference for order and payment processing.
 
@@ -15,13 +15,13 @@ Asri Online Store is a React-based storefront for Asri Collection, featuring a p
 
 ## Payment Flow
 
-The application uses Midtrans Snap with Supabase Edge Functions.
+The application uses Midtrans Snap Sandbox with Supabase Edge Functions.
 
 1. Customer selects products and proceeds to checkout.
 2. The frontend sends order information to the backend.
 3. The backend validates product information and calculates the transaction amount.
-4. The backend requests a Snap transaction token from Midtrans using the Server Key.
-5. The frontend opens the Midtrans Snap payment interface using the token and Client Key.
+4. The backend requests a Snap transaction token from Midtrans Sandbox using the Server Key.
+5. The frontend opens the Midtrans Snap Sandbox payment interface using the token and Client Key.
 6. Midtrans sends payment notifications to the backend.
 7. The backend verifies the payment and updates the order status.
 8. The frontend retrieves the order status from the backend.
@@ -38,9 +38,9 @@ Configure the following public environment variables:
 |---|---|
 | `VITE_SUPABASE_URL` | Supabase project URL |
 | `VITE_SUPABASE_ANON_KEY` | Supabase anonymous key |
-| `VITE_MIDTRANS_CLIENT_KEY` | Midtrans Client Key |
+| `VITE_MIDTRANS_CLIENT_KEY` | Midtrans Sandbox Client Key |
 
-The Client Key is intended for frontend use.
+The Client Key is intended for frontend use. Use Sandbox credentials only.
 
 ### Supabase Secrets
 
@@ -48,8 +48,8 @@ Configure these secrets in Supabase:
 
 | Secret | Description |
 |---|---|
-| `MIDTRANS_SERVER_KEY` | Midtrans Server Key |
-| `MIDTRANS_IS_PRODUCTION` | `false` for Sandbox, `true` for Production |
+| `MIDTRANS_SERVER_KEY` | Midtrans Sandbox Server Key |
+| `MIDTRANS_IS_PRODUCTION` | Set to `false` |
 
 **Never expose the Midtrans Server Key or Supabase Service Role Key in frontend code.**
 
@@ -65,28 +65,29 @@ The application includes reference code for these Supabase Edge Functions:
 
 The function code shown inside `App.jsx` is reference code. It must be deployed and configured in Supabase before it can be used by the application.
 
-## Midtrans Configuration
+## Midtrans Sandbox Configuration
 
-Use the matching environment for both backend API requests and Snap.js.
+Use the Sandbox endpoints:
 
-| Environment | Snap API | Snap.js |
-|---|---|---|
-| Sandbox | `https://app.sandbox.midtrans.com/snap/v1/transactions` | `https://app.sandbox.midtrans.com/snap/snap.js` |
-| Production | `https://app.midtrans.com/snap/v1/transactions` | `https://app.midtrans.com/snap/snap.js` |
+| Component | Sandbox URL |
+|---|---|
+| Snap API | `https://app.sandbox.midtrans.com/snap/v1/transactions` |
+| Snap.js | `https://app.sandbox.midtrans.com/snap/snap.js` |
 
-Configure the Midtrans Payment Notification URL to point to the deployed `midtrans-notification` Edge Function.
+Configure the Midtrans Sandbox Payment Notification URL to point to the deployed `midtrans-notification` Edge Function.
 
 The backend must verify notification signatures and validate payment status before marking an order as paid.
 
 ## Testing
 
-1. Configure Sandbox credentials.
-2. Deploy the required Supabase Edge Functions.
-3. Configure the Midtrans Notification URL.
-4. Complete a test checkout using Midtrans Sandbox.
-5. Confirm that the backend receives the notification and updates the order status.
+1. Configure Midtrans Sandbox Client Key and Server Key.
+2. Set `MIDTRANS_IS_PRODUCTION=false`.
+3. Deploy the required Supabase Edge Functions.
+4. Configure the Sandbox Payment Notification URL.
+5. Complete a test checkout using Midtrans Sandbox.
+6. Confirm that the backend receives the notification and updates the order status.
 
-Do not use Production credentials until the complete payment flow has been tested.
+This project documentation covers Sandbox testing only. Production configuration and deployment are out of scope.
 
 ## Current Limitations
 
@@ -94,7 +95,7 @@ Do not use Production credentials until the complete payment flow has been teste
 - Shipping cost uses a fixed sample value.
 - Supabase schema and Edge Function code are embedded as reference material in `App.jsx`.
 - Repository build and installation instructions are not included because project configuration files have not been verified.
-- Production payment readiness has not been verified.
+- The deployed Supabase functions and end-to-end Sandbox payment flow have not been independently verified.
 
 ## Official Documentation
 
